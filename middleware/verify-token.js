@@ -8,16 +8,13 @@ const verifyToken = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    console.log('TOKEN:', token);
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('DECODED:', decoded);
 
     req.user = decoded.payload;
 
     next();
   } catch (err) {
-    console.error('VERIFY TOKEN ERROR:', err.message);
+    console.error(err);
     res.status(401).json({ err: 'Invalid Token' });
   }
 };

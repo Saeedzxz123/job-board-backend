@@ -15,7 +15,7 @@ router.post('/sign-up', async (req, res) => {
 
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(409).json({ err: 'Username already exists' });
+      return res.status(409).json({ err: 'invalid username' });
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
