@@ -11,7 +11,11 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-});
+  isHR: {
+    type: Boolean,
+    default: false
+  }
+}, { timestamps: true });
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
