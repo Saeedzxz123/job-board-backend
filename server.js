@@ -1,40 +1,36 @@
-const dotenv = require('dotenv');
-
-dotenv.config();
+require('dotenv').config();
 const express = require('express');
-
-const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('morgan');
 
-// Controllers
 const authCtrl = require('./controllers/auth');
-
-// Middleware
+const jobsCtrl = require('./controllers/jobs');
+const appsCtrl = require('./controllers/applications');
 const verifyToken = require('./middleware/verify-token');
 
-mongoose.connect(process.env.MONGODB_URI);
+const app = express();
 
+mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on('connected', () => {
-  console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
+  console.log(`Connected to MongoDB ${mongoose.connection.name}`);
 });
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(logger('dev'));
 
-// Public Routes
+// Public
 app.use('/auth', authCtrl);
 
-// Protected Routes
+// Protected
 app.use(verifyToken);
+app.use('/jobs', jobsCtrl);
+app.use('/applications', appsCtrl);
 
-app.get('/test', (req, res) => {
-  console.log(req.user);
-  res.status(200).json({ message: 'you are logged in!' });
-});
+
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log('The express app is ready!');
+console.log('The express app is ready!');
 });
