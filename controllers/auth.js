@@ -44,12 +44,12 @@ router.post('/login', async (req, res) => {
 
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(401).json({ err: 'Invalid credentials' });
+      return res.status(401).json({ err: 'Invalid username or password' });
     }
 
     const isMatch = bcrypt.compareSync(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ err: 'Invalid credentials' });
+      return res.status(401).json({ err: 'Invalid username or password' });
     }
 
     const payload = { _id: user._id, isHR: user.isHR };
