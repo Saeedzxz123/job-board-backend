@@ -32,5 +32,5 @@ app.use('/applications', appsCtrl);
 
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log('Server is running');
+console.log('The express app is ready!');
 });

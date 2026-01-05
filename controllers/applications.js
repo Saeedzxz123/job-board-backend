@@ -4,7 +4,7 @@ const Job = require('../models/job');
 
 const router = express.Router();
 
-// APPLY FOR JOB (USER)
+
 router.post('/', async (req, res) => {
   try {
     const { job, cvUrl } = req.body;
@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// USER: GET MY APPLICATIONS
+
 router.get('/my', async (req, res) => {
   try {
     const applications = await Application.find({
