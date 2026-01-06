@@ -22,6 +22,10 @@ router.post('/', upload.single('cv'), async (req, res) => {
       user: req.user._id,
       cvUrl
     })
+        console.log('BODY:', req.body);   // 🔍 ADD
+    console.log('FILE:', req.file);   // 🔍 ADD
+    console.log('USER:', req.user);   // 🔍 ADD
+
 
     res.status(201).json(application)
   } catch (err) {
