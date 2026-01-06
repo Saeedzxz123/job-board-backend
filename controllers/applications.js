@@ -1,29 +1,33 @@
 const express = require('express');
 const Application = require('../models/application');
 const Job = require('../models/job');
+const upload = require('../middleware/uploadCV')
+const uploadToS3 = require('../utils/uploadToS3')
+
 
 const router = express.Router();
 
 
-router.post('/', async (req, res) => {
+router.post('/', upload.single('cv'), async (req, res) => {
   try {
-    const { job, cvUrl } = req.body;
-
-    if (!job || !cvUrl) {
-      return res.status(400).json({ err: 'Missing data' });
+    const { job } = req.body
+    if (!job || !req.file) {
+      return res.status(400).json({ err: 'Missing data' })
     }
+
+    const cvUrl = await uploadToS3(req.file, req.user._id, job)
 
     const application = await Application.create({
       job,
-      cvUrl,
-      user: req.user._id
-    });
+      user: req.user._id,
+      cvUrl
+    })
 
-    res.status(201).json(application);
-  } catch (error) {
-    res.status(500).json({ err: error.message });
+    res.status(201).json(application)
+  } catch (err) {
+    res.status(500).json({ err: err.message })
   }
-});
+})
 
 
 router.get('/my', async (req, res) => {

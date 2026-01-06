@@ -21,13 +21,15 @@
   },
   "homepage": "https://github.com/SEB-11-BH/SOLUTION-JWT-EXPRESS-API-TEMPLATE#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.962.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.1",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
