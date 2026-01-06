@@ -26,8 +26,8 @@ router.post('/sign-up', async (req, res) => {
       isHR
     });
 
-    const payload = { _id: user._id, isHR: user.isHR };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    const payload = { _id: user._id, username: user.username, isHR: user.isHR };
+    const token = jwt.sign({payload}, process.env.JWT_SECRET, {
       expiresIn: '7d'
     });
 
@@ -38,7 +38,7 @@ router.post('/sign-up', async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/sign-in', async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -52,8 +52,8 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ err: 'Invalid username or password' });
     }
 
-    const payload = { _id: user._id, isHR: user.isHR };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    const payload = { _id: user._id, username: user.username, isHR: user.isHR };
+    const token = jwt.sign({payload}, process.env.JWT_SECRET, {
       expiresIn: '7d'
     });
 
