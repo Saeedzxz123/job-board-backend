@@ -3,22 +3,22 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const router = express.Router();
+const router = express.Router()
 
 router.post('/sign-up', async (req, res) => {
   try {
     const { username, password, isHR } = req.body;
 
     if (!username || !password) {
-      return res.status(400).json({ err: 'Missing fields' });
+      return res.status(400).json({ err: 'Missing fields' })
     }
 
-    const existingUser = await User.findOne({ username });
+    const existingUser = await User.findOne({ username })
     if (existingUser) {
-      return res.status(409).json({ err: 'invalid username' });
+      return res.status(409).json({ err: 'invalid username' })
     }
 
-    const hashedPassword = bcrypt.hashSync(password, 10);
+    const hashedPassword = bcrypt.hashSync(password, 10)
 
     const user = await User.create({
       username,
@@ -26,15 +26,15 @@ router.post('/sign-up', async (req, res) => {
       isHR
     });
 
-    const payload = { _id: user._id, username: user.username, isHR: user.isHR };
+    const payload = { _id: user._id, username: user.username, isHR: user.isHR }
     const token = jwt.sign({payload}, process.env.JWT_SECRET, {
       expiresIn: '7d'
     });
 
-    res.status(201).json({ token });
+    res.status(201).json({ token })
 
   } catch (error) {
-    res.status(500).json({ err: error.message });
+    res.status(500).json({ err: error.message })
   }
 });
 
@@ -42,17 +42,17 @@ router.post('/sign-in', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username })
     if (!user) {
-      return res.status(401).json({ err: 'Invalid username or password' });
+      return res.status(401).json({ err: 'Invalid username or password' })
     }
 
     const isMatch = bcrypt.compareSync(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ err: 'Invalid username or password' });
+      return res.status(401).json({ err: 'Invalid username or password' })
     }
 
-    const payload = { _id: user._id, username: user.username, isHR: user.isHR };
+    const payload = { _id: user._id, username: user.username, isHR: user.isHR }
     const token = jwt.sign({payload}, process.env.JWT_SECRET, {
       expiresIn: '7d'
     });
@@ -60,8 +60,8 @@ router.post('/sign-in', async (req, res) => {
     res.status(200).json({ token });
 
   } catch (error) {
-    res.status(500).json({ err: error.message });
+    res.status(500).json({ err: error.message })
   }
 });
 
-module.exports = router;
+module.exports = router
