@@ -28,7 +28,8 @@ router.post('/', isHR, async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const jobs = await Job.find()
-      .populate('createdBy', 'username')
+  .sort({ createdAt: -1 })
+  .populate('createdBy', 'username')
 
     res.status(200).json(jobs);
   } catch (error) {
