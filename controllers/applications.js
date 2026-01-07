@@ -14,6 +14,15 @@ router.post('/', upload.single('cv'), async (req, res) => {
     if (!job || !req.file) {
       return res.status(400).json({ err: 'Missing data' })
     }
+    const existingApplication = await Application.findOne({
+      job,
+      user: req.user._id
+    })
+    if (existingApplication) {
+      return res.status(409).json({
+        err: 'You have already applied to this job !!'
+      })
+    }
 
     const cvUrl = await uploadToS3(req.file, req.user._id, job)
 
