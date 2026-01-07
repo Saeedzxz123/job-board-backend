@@ -28,30 +28,13 @@ router.post('/', isHR, async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const jobs = await Job.find()
-      .populate('createdBy', 'username');
-
+    .sort({ createdAt: -1 })
+    .populate('createdBy', 'username')
     res.status(200).json(jobs);
   } catch (error) {
     res.status(500).json({ err: error.message });
   }
 });
-
-router.get("/:id" , async(req , res)=>{
-  try{
-    const {id} = req.params
-    const job = await Job.findById(id)
-
-    if(!job){
-      res.status(404).json({error: "Job Not Found"})
-    }
-    else{
-      res.status(200).json({job})
-    }
-  }
-  catch(error){
-    res.status(500).json({error:"Failed to get job"})
-  }
-})
 
 
 

@@ -1,45 +1,47 @@
 const express = require('express');
 const Application = require('../models/application');
 const Job = require('../models/job');
-const upload = require('../middleware/uploadCV')
-const uploadToS3 = require('../utils/uploadToS3')
-
+const upload = require('../middleware/uploadCV');
+const uploadToS3 = require('../utils/uploadToS3');
 
 const router = express.Router();
 
-
 router.post('/', upload.single('cv'), async (req, res) => {
   try {
-    const { job } = req.body
+    const { job } = req.body;
+
     if (!job || !req.file) {
-      return res.status(400).json({ err: 'Missing data' })
+      return res.status(400).json({ err: 'Missing data' });
     }
 
-    const cvUrl = await uploadToS3(req.file, req.user._id, job)
+    const existingApplication = await Application.findOne({
+      job,
+      user: req.user._id,
+    });
+
+    if (existingApplication) {
+      return res.status(400).json({ err: 'You already applied for this job' });
+    }
+
+    const cvUrl = await uploadToS3(req.file, req.user._id, job);
 
     const application = await Application.create({
       job,
       user: req.user._id,
-      cvUrl
-    })
-        console.log('BODY:', req.body);   // 🔍 ADD
-    console.log('FILE:', req.file);   // 🔍 ADD
-    console.log('USER:', req.user);   // 🔍 ADD
+      cvUrl,
+    });
 
-
-    res.status(201).json(application)
+    res.status(201).json(application);
   } catch (err) {
-    res.status(500).json({ err: err.message })
+    res.status(500).json({ err: err.message });
   }
-})
-
+});
 
 router.get('/my', async (req, res) => {
   try {
     const applications = await Application.find({
-      user: req.user._id
-    })
-      .populate('job', 'title company');
+      user: req.user._id,
+    }).populate('job', 'title company');
 
     res.status(200).json(applications);
   } catch (error) {
@@ -57,7 +59,7 @@ router.get('/hr', async (req, res) => {
     const jobIds = jobs.map(job => job._id);
 
     const applications = await Application.find({
-      job: { $in: jobIds }
+      job: { $in: jobIds },
     })
       .populate('user', 'username')
       .populate('job', 'title company');
