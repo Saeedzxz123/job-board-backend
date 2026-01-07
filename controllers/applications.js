@@ -5,7 +5,7 @@ const upload = require('../middleware/uploadCV')
 const uploadToS3 = require('../utils/uploadToS3')
 
 
-const router = express.Router();
+const router = express.Router()
 
 
 router.post('/', upload.single('cv'), async (req, res) => {
@@ -22,17 +22,12 @@ router.post('/', upload.single('cv'), async (req, res) => {
       user: req.user._id,
       cvUrl
     })
-        console.log('BODY:', req.body);   // 🔍 ADD
-    console.log('FILE:', req.file);   // 🔍 ADD
-    console.log('USER:', req.user);   // 🔍 ADD
-
 
     res.status(201).json(application)
   } catch (err) {
     res.status(500).json({ err: err.message })
   }
 })
-
 
 router.get('/my', async (req, res) => {
   try {
