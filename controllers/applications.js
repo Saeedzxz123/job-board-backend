@@ -4,7 +4,7 @@ const Job = require('../models/job');
 const upload = require('../middleware/uploadCV');
 const uploadToS3 = require('../utils/uploadToS3');
 
-const router = express.Router();
+const router = express.Router()
 
 router.post('/', upload.single('cv'), async (req, res) => {
   try {
@@ -21,6 +21,15 @@ router.post('/', upload.single('cv'), async (req, res) => {
 
     if (existingApplication) {
       return res.status(400).json({ err: 'You already applied for this job' });
+    }
+    const existingApplication = await Application.findOne({
+      job,
+      user: req.user._id
+    })
+    if (existingApplication) {
+      return res.status(409).json({
+        err: 'You have already applied to this job !!'
+      })
     }
 
     const cvUrl = await uploadToS3(req.file, req.user._id, job);
