@@ -18,7 +18,6 @@ router.post('/', upload.single('cv'), async (req, res) => {
       job,
       user: req.user._id,
     });
-
     if (existingApplication) {
       return res.status(400).json({ err: 'You already applied for this job' });
     }
