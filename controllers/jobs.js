@@ -38,6 +38,23 @@ router.get('/', async (req, res) => {
 })
 
 
+router.get("/:id" , async(req , res)=>{
+  try{
+    const {id} = req.params
+    const job = await Job.findById(id)
+
+    if(!job){
+      res.status(404).json({error: "Job Not Found"})
+    }
+    else{
+      res.status(200).json({job})
+    }
+  }
+  catch(error){
+    res.status(500).json({error:"Failed to get job"})
+  }
+})
+
 
 router.put('/:id', isHR, async (req, res) => {
   try {
