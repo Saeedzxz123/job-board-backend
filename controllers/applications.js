@@ -16,13 +16,6 @@ router.post('/', upload.single('cv'), async (req, res) => {
 
     const existingApplication = await Application.findOne({
       job,
-      user: req.user._id,
-    });
-    if (existingApplication) {
-      return res.status(400).json({ err: 'You already applied for this job' });
-    }
-    const existingApplication = await Application.findOne({
-      job,
       user: req.user._id
     })
     if (existingApplication) {
